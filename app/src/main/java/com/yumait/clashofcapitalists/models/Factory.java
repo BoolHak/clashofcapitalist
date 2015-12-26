@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by JC SAVIGNY on 26/12/2015.
  */
-public class Factory implements Serializable {
+public class Factory extends Building implements Serializable {
 
     public static  final int FACTORY_FOOD = 0;
     public static  final int FACTORY_COGS = 1;
