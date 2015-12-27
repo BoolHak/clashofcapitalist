@@ -1,5 +1,8 @@
 package com.yumait.clashofcapitalists.activity;
 
+
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.graphics.Typeface;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +15,7 @@ import android.widget.RelativeLayout;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.yumait.clashofcapitalists.R;
 import com.yumait.clashofcapitalists.dialog.SimpleDialog;
+import com.yumait.clashofcapitalists.fragment.Home;
 import com.yumait.clashofcapitalists.ui.SmallProgressModel;
 import com.yumait.clashofcapitalists.views.SmallProgress;
 
@@ -41,6 +45,18 @@ public class MainActivity extends AppCompatActivity {
         String message = getResources().getString(R.string.wellcome);
         SimpleDialog dialog = new SimpleDialog(this,message);
         dialog.show();
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction =
+                fragmentManager.beginTransaction();
+        if(findViewById(R.id.fragment_container) != null) {
+            if(savedInstanceState != null) return;
+
+            Home homeFragment = Home.newInstance();
+            fragmentTransaction.add(R.id.fragment_container,homeFragment);
+            fragmentTransaction.commit();
+        }
+
     }
 
     private void initIndicators(){
