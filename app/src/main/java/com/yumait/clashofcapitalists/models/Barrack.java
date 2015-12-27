@@ -5,9 +5,12 @@ package com.yumait.clashofcapitalists.models;
  */
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
- * Casserne
+ * Caserne
  */
-public class Barrak extends ArmyFactory implements Serializable{
+public class Barrack extends ArmyFactory implements Serializable {
+
+
 }

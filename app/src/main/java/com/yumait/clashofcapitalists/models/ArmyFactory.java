@@ -8,33 +8,25 @@ import java.io.Serializable;
 public abstract class ArmyFactory extends Building implements Serializable{
 
     public static int ARM_FACTORY_TYPE_TANKS = 0;
+    public static int ARM_FACTORY_TYPE_PLANES = 1;
     //TODO the rest of army factory types
 
-    private String armyFactoryId;
-    private int armyFactoryCapacity;
-    private int armFactoryType;
+    private int armyFactoryType;
+    private int armyFactoryLevel;
 
-    public String getArmyFactoryId() {
-        return armyFactoryId;
+    public int getArmyFactoryType() {
+        return armyFactoryType;
     }
 
-    public void setArmyFactoryId(String armyFactoryId) {
-        this.armyFactoryId = armyFactoryId;
+    public void setArmyFactoryType(int armyFactoryType) {
+        this.armyFactoryType = armyFactoryType;
     }
 
-    public int getArmyFactoryCapacity() {
-        return armyFactoryCapacity;
+    public int getArmyFactoryLevel() {
+        return armyFactoryLevel;
     }
 
-    public void setArmyFactoryCapacity(int armyFactoryCapacity) {
-        this.armyFactoryCapacity = armyFactoryCapacity;
-    }
-
-    public int getArmFactoryType() {
-        return armFactoryType;
-    }
-
-    public void setArmFactoryType(int armFactoryType) {
-        this.armFactoryType = armFactoryType;
+    public void setArmyFactoryLevel(int armyFactoryLevel) {
+        this.armyFactoryLevel = armyFactoryLevel;
     }
 }

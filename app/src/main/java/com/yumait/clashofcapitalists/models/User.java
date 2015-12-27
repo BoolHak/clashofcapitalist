@@ -27,6 +27,7 @@ public class User implements Serializable {
     private List<Colony> userColonies;
     private List<ArmyFactory> userArmyFactories;
     private List<Upgrade> userUpgrades;
+    private List<Soldier> userSoldiers;
     private Stock userStock;
 
 
@@ -180,5 +181,13 @@ public class User implements Serializable {
 
     public void setUserStock(Stock userStock) {
         this.userStock = userStock;
+    }
+
+    public List<Soldier> getUserSoldiers() {
+        return userSoldiers;
+    }
+
+    public void setUserSoldiers(List<Soldier> userSoldiers) {
+        this.userSoldiers = userSoldiers;
     }
 }
