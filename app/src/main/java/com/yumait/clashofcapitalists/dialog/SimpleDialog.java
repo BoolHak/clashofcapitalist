@@ -43,6 +43,7 @@ public class SimpleDialog extends Dialog {
 
         title.setTypeface(mainController.robotoLight);
         messageText.setTypeface(mainController.dolar);
+        messageText.setText(message);
 
 
         btnClose.setOnClickListener(new View.OnClickListener() {

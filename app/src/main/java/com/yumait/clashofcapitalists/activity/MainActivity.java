@@ -4,8 +4,12 @@ import android.graphics.Typeface;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.yumait.clashofcapitalists.R;
 import com.yumait.clashofcapitalists.dialog.SimpleDialog;
 import com.yumait.clashofcapitalists.ui.SmallProgressModel;
@@ -48,7 +52,24 @@ public class MainActivity extends AppCompatActivity {
         money.initView(this,new SmallProgressModel(R.mipmap.ic_money,100, 200));
         food.initView(this,new SmallProgressModel(R.mipmap.ic_food,20, 200));
         tech.initView(this,new SmallProgressModel(R.mipmap.ic_tech,50, 200));
-        cogs.initView(this,new SmallProgressModel(R.mipmap.ic_cogs,70, 200));
+        cogs.initView(this, new SmallProgressModel(R.mipmap.ic_cogs, 70, 200));
+
+        ImageView icon = new ImageView(this);
+        icon.setImageDrawable(getResources().getDrawable(R.mipmap.ic_map));
+
+        FloatingActionButton actionButton = new FloatingActionButton.Builder(this)
+                .setContentView(icon)
+                .build();
+
+        actionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SimpleDialog dialog = new SimpleDialog(MainActivity.this,"Should go to the map");
+                dialog.show();
+            }
+        });
+
+        //((RelativeLayout)findViewById(R.id.main_view)).addView(actionButton);
     }
 
     @Override
