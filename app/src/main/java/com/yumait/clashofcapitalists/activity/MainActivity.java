@@ -8,6 +8,8 @@ import android.view.WindowManager;
 
 import com.yumait.clashofcapitalists.R;
 import com.yumait.clashofcapitalists.dialog.SimpleDialog;
+import com.yumait.clashofcapitalists.ui.SmallProgressModel;
+import com.yumait.clashofcapitalists.views.SmallProgress;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,9 +32,23 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        initIndicators();
+
         String message = getResources().getString(R.string.wellcome);
         SimpleDialog dialog = new SimpleDialog(this,message);
         dialog.show();
+    }
+
+    private void initIndicators(){
+        SmallProgress money = (SmallProgress) findViewById(R.id.money);
+        SmallProgress food = (SmallProgress) findViewById(R.id.food);
+        SmallProgress tech = (SmallProgress) findViewById(R.id.tech);
+        SmallProgress cogs = (SmallProgress) findViewById(R.id.cogs);
+
+        money.initView(this,new SmallProgressModel(R.mipmap.ic_money,100, 200));
+        food.initView(this,new SmallProgressModel(R.mipmap.ic_food,20, 200));
+        tech.initView(this,new SmallProgressModel(R.mipmap.ic_tech,50, 200));
+        cogs.initView(this,new SmallProgressModel(R.mipmap.ic_cogs,70, 200));
     }
 
     @Override

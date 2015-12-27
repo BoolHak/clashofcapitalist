@@ -7,4 +7,6 @@
     <color name="white">#ffffff</color>
     <color name="transparent">#00000000</color>
     <color name="black">#000000</color>
+    <color name="black_50">#80000000</color>
+    <color name="gray_light">#ecf0f1</color>
 </resources>

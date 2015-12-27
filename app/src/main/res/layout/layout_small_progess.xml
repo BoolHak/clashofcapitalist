@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/black_50"
+    android:layout_width="80dp" android:layout_height="15dp">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:progress="20"
+        android:layout_marginTop="1dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="1dp"
+        android:layout_toRightOf="@+id/image"
+        android:layout_toEndOf="@+id/image"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:max="100"/>
+
+    <ImageView
+        android:background="@color/gray_light"
+        android:layout_width="15dp"
+        android:layout_height="20dp"
+        android:src="@mipmap/ic_money"
+        android:padding="1dp"
+        android:id="@+id/image" />
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="10sp"
+        android:text="2002"
+        android:gravity="center"
+        android:layout_marginBottom="2dp"
+        android:layout_centerVertical="true"
+        android:singleLine="true"
+        android:layout_alignTop="@+id/progressBar"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/image"
+        android:layout_toEndOf="@+id/image"
+        />
+
+</RelativeLayout>
