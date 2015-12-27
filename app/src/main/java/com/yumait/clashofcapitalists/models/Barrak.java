@@ -4,8 +4,10 @@ package com.yumait.clashofcapitalists.models;
  * Created by JC SAVIGNY on 26/12/2015.
  */
 
+import java.io.Serializable;
+
 /**
  * Casserne
  */
-public class Barrak extends ArmyFactory {
+public class Barrak extends ArmyFactory implements Serializable{
 }

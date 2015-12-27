@@ -5,4 +5,52 @@ package com.yumait.clashofcapitalists.models;
  */
 public abstract class Arm {
     public static int ARM_TYPE_AIR = 0;
+    public static int ARM_TYPE_MARINE = 1;
+    public static int ARM_TYPE_LAND = 2;
+
+    private String armId;
+    private String armName;
+    private int armAttackPower;
+    private int armDefensePower;
+    private int armClass;
+
+    public String getArmId() {
+        return armId;
+    }
+
+    public void setArmId(String armId) {
+        this.armId = armId;
+    }
+
+    public String getArmName() {
+        return armName;
+    }
+
+    public void setArmName(String armName) {
+        this.armName = armName;
+    }
+
+    public int getArmAttackPower() {
+        return armAttackPower;
+    }
+
+    public void setArmAttackPower(int armAttackPower) {
+        this.armAttackPower = armAttackPower;
+    }
+
+    public int getArmDefensePower() {
+        return armDefensePower;
+    }
+
+    public void setArmDefensePower(int armDefensePower) {
+        this.armDefensePower = armDefensePower;
+    }
+
+    public int getArmClass() {
+        return armClass;
+    }
+
+    public void setArmClass(int armClass) {
+        this.armClass = armClass;
+    }
 }
