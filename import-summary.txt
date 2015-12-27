@@ -7,38 +7,10 @@ The following files were *not* copied into the new Gradle project; you
 should evaluate whether these are still needed in your project and if
 so manually move them:
 
-* .externalToolBuilders\
-* .externalToolBuilders\AndEngine ant build [Builder].launch
 * .gitignore
-* AUTHORS.md
-* LICENSE.md
 * README.md
 * build.xml
-* checkstyle.xml
-* ext\
-* ext\img\
-* ext\img\android.svg
-* ext\img\badge.png
-* ext\img\badge.svg
-* ext\img\badge_xlarge.png
-* ext\img\clapboard.png
-* ext\img\clapboard.svg
-* ext\img\favicon.png
-* ext\img\favicon.svg
-* ext\img\icon.svg
-* ext\img\logo.png
-* ext\img\logo.svg
-* ext\img\logo_icon.svg
-* ext\img\source.png
-* ext\img\source.svg
-* ext\img\splash.png
-* ext\img\splash.svg
-* ext\libs\
-* ext\libs\ant-contrib-1.0b3.jar
-* ext\scripts\
-* ext\scripts\build_texturepacks.sh
-* git-rank-contributors.rb
-* proguard-project.txt
+* proguard.cfg
 
 Replaced Jars with Dependencies:
 --------------------------------
@@ -57,29 +29,12 @@ Moved Files:
 Android Gradle projects use a different directory structure than ADT
 Eclipse projects. Here's how the projects were restructured:
 
-* AndroidManifest.xml => andEngine\src\main\AndroidManifest.xml
-* assets\ => andEngine\src\main\assets
-* jni\ => andEngine\src\main\jni\
-* libs\armeabi-v7a\libandengine.so => andEngine\src\main\jniLibs\armeabi-v7a\libandengine.so
-* libs\armeabi\libandengine.so => andEngine\src\main\jniLibs\armeabi\libandengine.so
-* libs\mips\libandengine.so => andEngine\src\main\jniLibs\mips\libandengine.so
-* libs\x86\libandengine.so => andEngine\src\main\jniLibs\x86\libandengine.so
-* res\ => andEngine\src\main\res\
-* src\ => andEngine\src\main\java\
-
-Missing Android Support Repository:
------------------------------------
-Some useful libraries, such as the Android Support Library, are
-installed from a special Maven repository, which should be installed
-via the SDK manager.
-
-It looks like this library is missing from your SDK installation at:
-null
-
-To install it, open the SDK manager, and in the Extras category,
-select "Android Support Repository". You may also want to install the
-"Google Repository" if you want to use libraries like Google Play
-Services.
+* AndroidManifest.xml => TMXTiledMapExtension\src\main\AndroidManifest.xml
+* assets\ => TMXTiledMapExtension\src\main\assets
+* lint.xml => TMXTiledMapExtension\lint.xml
+* res\ => TMXTiledMapExtension\src\main\res\
+* src\ => TMXTiledMapExtension\src\main\java\
+* src\org\andengine\extension\tmx\.gitignore => TMXTiledMapExtension\src\main\resources\org\andengine\extension\tmx\.gitignore
 
 Next Steps:
 -----------
