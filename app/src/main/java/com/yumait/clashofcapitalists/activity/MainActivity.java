@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //((RelativeLayout)findViewById(R.id.main_view)).addView(actionButton);
     }
 
     @Override
