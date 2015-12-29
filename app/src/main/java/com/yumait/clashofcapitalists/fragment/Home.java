@@ -79,14 +79,11 @@ public class Home extends Fragment  implements OnTouchListener {
 
     private DisplayObject mSelectedObject;
 
-    public static Home newInstance() {
+    public  Home newInstance() {
         Home fragment = new Home();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public Home() {
     }
 
     @Override
@@ -218,7 +215,7 @@ public class Home extends Fragment  implements OnTouchListener {
         // resume the stage
         if (mStage != null && mScene != null) {
             mStage.onResume();
-                mScene.resume();
+            mScene.resume();
 
         }
     }
