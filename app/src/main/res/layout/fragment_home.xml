@@ -1,10 +1,10 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.yumait.clashofcapitalists.fragment.Home">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
+    android:layout_height="fill_parent" tools:context="com.yumait.clashofcapitalists.fragment.Home">
 
     <com.funzio.pure2D.BaseStage
         android:id="@+id/stage"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
 
-</FrameLayout>
+</LinearLayout>

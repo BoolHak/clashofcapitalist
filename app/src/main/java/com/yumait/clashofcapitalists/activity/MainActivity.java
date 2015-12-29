@@ -7,10 +7,12 @@ import android.graphics.Typeface;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.view.View.OnTouchListener;
 
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.yumait.clashofcapitalists.R;
@@ -19,7 +21,7 @@ import com.yumait.clashofcapitalists.fragment.Home;
 import com.yumait.clashofcapitalists.ui.SmallProgressModel;
 import com.yumait.clashofcapitalists.views.SmallProgress;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnTouchListener{
 
     public static Typeface robotoLight;
     public static Typeface dolar;
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
         String message = getResources().getString(R.string.wellcome);
         SimpleDialog dialog = new SimpleDialog(this,message);
-        dialog.show();
+        //dialog.show();
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction =
@@ -91,5 +93,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+    }
+
+    @Override
+    public boolean onTouch(final View v, final MotionEvent event) {
+        return false;
     }
 }

@@ -13,22 +13,41 @@ import android.view.ViewGroup;
 
 import com.funzio.pure2D.BaseScene;
 import com.funzio.pure2D.BaseStage;
+import com.funzio.pure2D.Camera;
+import com.funzio.pure2D.DisplayObject;
+import com.funzio.pure2D.Pure2D;
 import com.funzio.pure2D.Scene;
 import com.funzio.pure2D.animators.Animator;
 import com.funzio.pure2D.animators.TrajectoryAnimator;
+import com.funzio.pure2D.astar.Astar;
+import com.funzio.pure2D.astar.AstarAdapter;
+import com.funzio.pure2D.astar.AstarNode;
+import com.funzio.pure2D.astar.AstarNodeSet;
 import com.funzio.pure2D.atlas.JsonAtlas;
+import com.funzio.pure2D.containers.DisplayGroup;
+import com.funzio.pure2D.containers.GridGroup;
+import com.funzio.pure2D.effects.trails.MotionTrailShape;
 import com.funzio.pure2D.gl.GLColor;
+import com.funzio.pure2D.gl.gl10.BlendModes;
 import com.funzio.pure2D.gl.gl10.GLState;
 import com.funzio.pure2D.gl.gl10.textures.Texture;
+import com.funzio.pure2D.grid.HexGrid;
+import com.funzio.pure2D.grid.VerticalHexGrid;
+import com.funzio.pure2D.shapes.Sprite;
 import com.funzio.pure2D.uni.UniClip;
 import com.funzio.pure2D.uni.UniGroup;
 import com.yumait.clashofcapitalists.R;
 import com.yumait.clashofcapitalists.activity.MainActivity;
+import com.yumait.clashofcapitalists.objects.UniBouncer;
+import android.view.View.OnTouchListener;
 
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
-public class Home extends Fragment implements View.OnTouchListener, Animator.AnimatorListener {
+public class Home extends Fragment  implements OnTouchListener {
 
     private MainActivity mainActivity;
     final protected static int OBJ_INIT_NUM = 1000;
@@ -42,17 +61,23 @@ public class Home extends Fragment implements View.OnTouchListener, Animator.Ani
     final protected static GLColor COLOR_GREEN = new GLColor(0, 0.7f, 0, 1);
     final protected static GLColor COLOR_BLUE = new GLColor(0, 0, 0.7f, 1);
     final protected static GLColor COLOR_YELLOW = new GLColor(1f, 1f, 0, 1);
+    final protected static GLColor COLOR_TRANSPARENT = new GLColor(0, 0, 0, 0);
 
     protected BaseStage mStage;
     protected BaseScene mScene;
     protected Point mDisplaySize = new Point();
     protected Point mDisplaySizeDiv2 = new Point();
-    protected Random mRandom = new Random();
-    protected PointF mTempPoint = new PointF();
+    private Camera mCamera;
+    protected PointF mRegisteredVector;
+    protected PointF mRegisteredCenter;
+    protected float mRegisteredZoom = 1;
+    protected float mRegisteredRotation = 0;
 
-    private Texture mTexture;
-    private JsonAtlas mAtlas;
-    private UniGroup mUniGroup;
+
+
+
+
+    private DisplayObject mSelectedObject;
 
     public static Home newInstance() {
         Home fragment = new Home();
@@ -77,122 +102,103 @@ public class Home extends Fragment implements View.OnTouchListener, Animator.Ani
 
 
 
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        return initView(inflater,container);
+
+        return initView(inflater, container);
+    }
+
+    private Texture loadTexture() {
+        return mScene.getTextureManager().createDrawableTexture(R.drawable.tile, null);
+    }
+
+    private void addObject(final Texture texture, final float x, final float y) {
+        // convert from screen to scene's coordinates
+        DisplayGroup container = new DisplayGroup();
+        container.setPosition(0, 0);
+        PointF mTempPoint = new PointF();
+        mScene.screenToGlobal(x, y, mTempPoint);
+
+        // create object
+        Sprite obj = new Sprite();
+        // center origin
+        //obj.setOriginAtCenter();
+        obj.setTexture(texture);
+        // set positions
+        obj.setPosition(mTempPoint.x, mTempPoint.y);
+        float xFactor = obj.getWidth()/2 + 1;
+        float yFactor = -1*(obj.getHeight() / 2) + 15.5f;
+        container.addChild(obj);
+
+        for (int i= 1; i < 35; i++){
+            for(int j= 0; j < 35; j++){
+                Sprite obj2 = new Sprite();
+                obj2.setTexture(texture);
+                float x2 = x + i*xFactor - j*xFactor;
+                float y2 = y + i*yFactor+ j*yFactor;
+                obj2.setPosition(x2,y2);
+                container.addChild(obj2);
+            }
+        }
+
+        mScene.addChild(container);
+
+
+
+
+        // add to scene
+
+        //Log.d("sprite size", "Height =" + obj.getHeight() + ", Width = " + obj.getWidth());
+
+
     }
 
     private View initView(LayoutInflater inflater, ViewGroup container){
         View mainView = inflater.inflate(R.layout.fragment_home, container, false);
-        // set up the stage and scene
+
         mStage = (BaseStage) mainView.findViewById(R.id.stage);
         mScene = createScene();
-        // mScene.setAutoClear(false);
         mStage.setScene(mScene);
         mStage.setOnTouchListener(this);
 
-        setCoinExplotion();
 
-        return mainView;
-    }
-
-    private void setCoinExplotion() {
-
-        try {
-            mAtlas = new JsonAtlas(mScene.getAxisSystem());
-            mAtlas.load(mainActivity.getAssets(), "atlas/coin_01_60.json", 1);
-        } catch (Exception e) {
-            Log.e("JsonAtlasActivity", Log.getStackTraceString(e));
-        }
+        mScene.setColor(COLOR_TRANSPARENT);
+        mScene.setRenderContinueously(true);
+        Pure2D.setAutoUpdateBounds(true); // for camera clipping
+        mCamera = new Camera(new PointF(mDisplaySizeDiv2), new PointF(mDisplaySize));
+        mCamera.setClipping(true);
+        mScene.setCamera(mCamera);
 
         mScene.setListener(new Scene.Listener() {
 
             @Override
             public void onSurfaceCreated(final GLState glState, final boolean firstTime) {
                 if (firstTime) {
-
                     // load the textures
-                    loadTexture();
+                    Texture texture = loadTexture();
 
-                    mUniGroup = new UniGroup();
-                    mUniGroup.setTexture(mTexture);
-                    mScene.addChild(mUniGroup);
+                    // create first obj
+                    final float x = mDisplaySize.x / 2;
+                    final float y = 3 * (mDisplaySize.y / 2);
 
-                    // generate a lot of squares
-                    addSome(mDisplaySizeDiv2.x, mDisplaySizeDiv2.y);
+                    addObject(texture, x, y);
                 }
             }
         });
 
-    }
 
-    private void loadTexture() {
-        // create texture
-        mTexture = mScene.getTextureManager().createAssetTexture("atlas/coin_01_60.png", null);
-    }
 
-    private void addObject(final float x, final float y) {
-        // create object
-        UniClip obj = new UniClip(mAtlas.getMasterFrameSet());
-        obj.playAt(mRandom.nextInt(obj.getNumFrames()));
-        // obj.setRotation(mRandom.nextInt(360));
-        // obj.setFps(30);
-
-        // center origin
-        obj.setOriginAtCenter();
-
-        // position
-        obj.setPosition(x, y);
-
-        // add to scene
-        mUniGroup.addChild(obj);
-
-        // animation
-        final TrajectoryAnimator animator = new TrajectoryAnimator(0);
-        // animator.setTargetAngleFixed(false);
-        // animator.setTargetAngleOffset(-90);
-        obj.addManipulator(animator);
-        animator.start(mRandom.nextInt(100), (float) (mRandom.nextInt(360) * Math.PI / 180));
-        animator.setListener(this);
-    }
-
-    private void addSome(final float screenX, final float screenY) {
-        mScene.screenToGlobal(screenX, screenY, mTempPoint);
-        for (int i = 0; i < 10; i++) {
-            addObject(mTempPoint.x, mTempPoint.y);
-        }
+        return mainView;
     }
 
     protected BaseScene createScene() {
         return new BaseScene();
     }
 
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        final int action = event.getActionMasked();
-
-        if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_MOVE) {
-            final int num = event.getPointerCount();
-            for (int i = 0; i < num; i++) {
-                final float x = event.getX(i);
-                final float y = event.getY(i);
-                mStage.queueEvent(new Runnable() {
-                    @Override
-                    public void run() {
-                        addSome(x, y);
-                    }
-                });
-            }
-        }
-
-        return true;
-    }
 
     @Override
     public void onPause() {
@@ -218,12 +224,53 @@ public class Home extends Fragment implements View.OnTouchListener, Animator.Ani
     }
 
     @Override
-    public void onAnimationEnd(Animator animator) {
+    public boolean onTouch(final View v, final MotionEvent event) {
 
-    }
+        // find the vector
+        PointF p1 = null;
+        PointF p2 = null;
+        PointF vector = null;
+        if (event.getPointerCount() == 2) {
+            p1 = new PointF(event.getX(0), mDisplaySize.y - event.getY(0));
+            p2 = new PointF(event.getX(1), mDisplaySize.y - event.getY(1));
+            vector = new PointF(p2.x - p1.x, p2.y - p1.y);
+        } else if (event.getPointerCount() < 2) {
+            //mRegisteredVector;
+        }
 
-    @Override
-    public void onAnimationUpdate(Animator animator, float value) {
+        if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            if (event.getPointerCount() == 1) {
+                if (mRegisteredCenter == null) {
+                    mRegisteredCenter = mCamera.getPosition();
+                } else {
+                    float deltaX = event.getX() - mRegisteredCenter.x;
+                    float deltaY = mDisplaySize.y - event.getY() - mRegisteredCenter.y;
+                    mCamera.moveTo(mRegisteredCenter.x + deltaX, mRegisteredCenter.y + deltaY);
+                }
+            } else if (event.getPointerCount() == 2) {
 
+                if (mRegisteredVector == null) {
+                    mRegisteredVector = new PointF(vector.x, vector.y);
+                    mRegisteredZoom = mCamera.getZoom().x;
+                    //mRegisteredRotation = mCamera.getRotation();
+                }
+
+                // focus on the center of the vector
+                mCamera.setPosition(
+                        ( p1.x + vector.x / 2 ),
+                        ( p1.y + vector.y / 2)
+                );
+                // zoom it
+                float scale = vector.length() / mRegisteredVector.length();
+                if (scale > 0) {
+                    mCamera.setZoom(mRegisteredZoom * scale);
+                }
+            }
+        }
+        /*if(event.getAction() == MotionEvent.ACTION_DOWN){
+                mRegisteredCenter = mCamera.getPosition();
+        }*/
+
+        return true;
     }
 }
