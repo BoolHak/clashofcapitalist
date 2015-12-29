@@ -11,7 +11,7 @@ public class Colony implements Serializable {
     private String colonyId;
     private String colonyName;
     private String colonyOwnerId;
-    private List<Building> colonyDefense;
+    private List<TankFactory> colonyDefense;
     private int colonyGoldValue;
 
     public String getColonyId() {
@@ -38,11 +38,11 @@ public class Colony implements Serializable {
         this.colonyOwnerId = colonyOwnerId;
     }
 
-    public List<Building> getColonyDefense() {
+    public List<TankFactory> getColonyDefense() {
         return colonyDefense;
     }
 
-    public void setColonyDefense(List<Building> colonyDefense) {
+    public void setColonyDefense(List<TankFactory> colonyDefense) {
         this.colonyDefense = colonyDefense;
     }
 
