@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.view.View.OnTouchListener;
@@ -72,12 +73,17 @@ public class MainActivity extends AppCompatActivity implements OnTouchListener{
         tech.initView(this,new SmallProgressModel(R.mipmap.ic_tech,50, 200));
         cogs.initView(this, new SmallProgressModel(R.mipmap.ic_cogs, 70, 200));
 
-        ImageView icon = new ImageView(this);
-        icon.setImageDrawable(getResources().getDrawable(R.mipmap.ic_map));
+        ImageView iconMap = new ImageView(this);
+        iconMap.setImageDrawable(getResources().getDrawable(R.mipmap.ic_map));
 
         FloatingActionButton actionButton = new FloatingActionButton.Builder(this)
-                .setContentView(icon)
+                .setContentView(iconMap)
                 .build();
+
+        /*FloatingActionButton actionBuild = new FloatingActionButton.Builder(this)
+                .setContentView(iconMap)
+                .build();
+        */
 
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements OnTouchListener{
                 dialog.show();
             }
         });
+
 
     }
 

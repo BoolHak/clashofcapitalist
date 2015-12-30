@@ -79,7 +79,7 @@ public class Home extends Fragment  implements OnTouchListener {
 
     private DisplayObject mSelectedObject;
 
-    public  Home newInstance() {
+    public static Home newInstance() {
         Home fragment = new Home();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -130,28 +130,21 @@ public class Home extends Fragment  implements OnTouchListener {
         float xFactor = obj.getWidth()/2 + 1;
         float yFactor = -1*(obj.getHeight() / 2) + 15.5f;
         container.addChild(obj);
-
+        PointF[][] positionTabls = new PointF[35][35];
+        positionTabls[0][0] = new PointF(x,y);
         for (int i= 1; i < 35; i++){
             for(int j= 0; j < 35; j++){
                 Sprite obj2 = new Sprite();
                 obj2.setTexture(texture);
                 float x2 = x + i*xFactor - j*xFactor;
                 float y2 = y + i*yFactor+ j*yFactor;
+                positionTabls[i][j] = new PointF(x2,y2);
                 obj2.setPosition(x2,y2);
                 container.addChild(obj2);
             }
         }
 
         mScene.addChild(container);
-
-
-
-
-        // add to scene
-
-        //Log.d("sprite size", "Height =" + obj.getHeight() + ", Width = " + obj.getWidth());
-
-
     }
 
     private View initView(LayoutInflater inflater, ViewGroup container){
@@ -240,9 +233,9 @@ public class Home extends Fragment  implements OnTouchListener {
                 if (mRegisteredCenter == null) {
                     mRegisteredCenter = mCamera.getPosition();
                 } else {
-                    float deltaX = event.getX() - mRegisteredCenter.x;
-                    float deltaY = mDisplaySize.y - event.getY() - mRegisteredCenter.y;
-                    mCamera.moveTo(mRegisteredCenter.x + deltaX, mRegisteredCenter.y + deltaY);
+                    float deltaX = (event.getX() - mRegisteredCenter.x)/100;
+                    float deltaY = (mDisplaySize.y - event.getY() - mRegisteredCenter.y)/100;
+                    mCamera.moveTo(mRegisteredCenter.x - deltaX, mRegisteredCenter.y - deltaY);
                 }
             } else if (event.getPointerCount() == 2) {
 
@@ -253,10 +246,10 @@ public class Home extends Fragment  implements OnTouchListener {
                 }
 
                 // focus on the center of the vector
-                mCamera.setPosition(
+                /*mCamera.setPosition(
                         ( p1.x + vector.x / 2 ),
                         ( p1.y + vector.y / 2)
-                );
+                );*/
                 // zoom it
                 float scale = vector.length() / mRegisteredVector.length();
                 if (scale > 0) {
@@ -264,9 +257,7 @@ public class Home extends Fragment  implements OnTouchListener {
                 }
             }
         }
-        /*if(event.getAction() == MotionEvent.ACTION_DOWN){
-                mRegisteredCenter = mCamera.getPosition();
-        }*/
+
 
         return true;
     }
