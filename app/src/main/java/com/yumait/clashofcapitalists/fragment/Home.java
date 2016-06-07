@@ -39,6 +39,7 @@ import com.funzio.pure2D.uni.UniGroup;
 import com.yumait.clashofcapitalists.R;
 import com.yumait.clashofcapitalists.activity.MainActivity;
 import com.yumait.clashofcapitalists.objects.UniBouncer;
+
 import android.view.View.OnTouchListener;
 
 
@@ -47,13 +48,11 @@ import java.util.List;
 import java.util.Random;
 
 
-public class Home extends Fragment  implements OnTouchListener {
+public class Home extends Fragment implements OnTouchListener {
 
-    private MainActivity mainActivity;
     final protected static int OBJ_INIT_NUM = 1000;
     final protected static int OBJ_STEP_NUM = 100;
     final protected static Random RANDOM = new Random();
-
     final protected static GLColor COLOR_BLACK = GLColor.BLACK;
     final protected static GLColor COLOR_WHITE = GLColor.WHITE;
     final protected static GLColor COLOR_GRAY = new GLColor(0.5f, 0.5f, 0.5f, 1);
@@ -62,21 +61,21 @@ public class Home extends Fragment  implements OnTouchListener {
     final protected static GLColor COLOR_BLUE = new GLColor(0, 0, 0.7f, 1);
     final protected static GLColor COLOR_YELLOW = new GLColor(1f, 1f, 0, 1);
     final protected static GLColor COLOR_TRANSPARENT = new GLColor(0, 0, 0, 0);
-
+    private final int MAP_SIZE = 20;
     protected BaseStage mStage;
     protected BaseScene mScene;
     protected Point mDisplaySize = new Point();
     protected Point mDisplaySizeDiv2 = new Point();
-    private Camera mCamera;
-    protected PointF mRegisteredVector;
+    protected PointF oldVector;
     protected PointF mRegisteredCenter;
     protected float mRegisteredZoom = 1;
     protected float mRegisteredRotation = 0;
-
-
-
-
-
+    float oldX = 0, oldY = 0;
+    PointF vector = new PointF(0, 0);
+    PointF p1 = null;
+    PointF p2 = null;
+    private MainActivity mainActivity;
+    private Camera mCamera;
     private DisplayObject mSelectedObject;
 
     public static Home newInstance() {
@@ -89,14 +88,13 @@ public class Home extends Fragment  implements OnTouchListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainActivity = (MainActivity)getActivity();
+        mainActivity = (MainActivity) getActivity();
 
         final DisplayMetrics metrics = getResources().getDisplayMetrics();
         mDisplaySize.x = metrics.widthPixels;
         mDisplaySize.y = metrics.heightPixels;
         mDisplaySizeDiv2.x = mDisplaySize.x / 2;
         mDisplaySizeDiv2.y = mDisplaySize.y / 2;
-
 
 
     }
@@ -127,19 +125,19 @@ public class Home extends Fragment  implements OnTouchListener {
         obj.setTexture(texture);
         // set positions
         obj.setPosition(mTempPoint.x, mTempPoint.y);
-        float xFactor = obj.getWidth()/2 + 1;
-        float yFactor = -1*(obj.getHeight() / 2) + 15.5f;
+        float xFactor = obj.getWidth() / 2 + 1;
+        float yFactor = -1 * (obj.getHeight() / 2) + 15.5f;
         container.addChild(obj);
-        PointF[][] positionTabls = new PointF[35][35];
-        positionTabls[0][0] = new PointF(x,y);
-        for (int i= 1; i < 35; i++){
-            for(int j= 0; j < 35; j++){
+        PointF[][] positionTabls = new PointF[MAP_SIZE][MAP_SIZE];
+        positionTabls[0][0] = new PointF(x, y);
+        for (int i = 1; i < MAP_SIZE; i++) {
+            for (int j = 0; j < MAP_SIZE; j++) {
                 Sprite obj2 = new Sprite();
                 obj2.setTexture(texture);
-                float x2 = x + i*xFactor - j*xFactor;
-                float y2 = y + i*yFactor+ j*yFactor;
-                positionTabls[i][j] = new PointF(x2,y2);
-                obj2.setPosition(x2,y2);
+                float x2 = x + i * xFactor - j * xFactor;
+                float y2 = y + i * yFactor + j * yFactor;
+                positionTabls[i][j] = new PointF(x2, y2);
+                obj2.setPosition(x2, y2);
                 container.addChild(obj2);
             }
         }
@@ -147,7 +145,7 @@ public class Home extends Fragment  implements OnTouchListener {
         mScene.addChild(container);
     }
 
-    private View initView(LayoutInflater inflater, ViewGroup container){
+    private View initView(LayoutInflater inflater, ViewGroup container) {
         View mainView = inflater.inflate(R.layout.fragment_home, container, false);
 
         mStage = (BaseStage) mainView.findViewById(R.id.stage);
@@ -179,7 +177,6 @@ public class Home extends Fragment  implements OnTouchListener {
                 }
             }
         });
-
 
 
         return mainView;
@@ -216,46 +213,62 @@ public class Home extends Fragment  implements OnTouchListener {
     @Override
     public boolean onTouch(final View v, final MotionEvent event) {
 
-        // find the vector
-        PointF p1 = null;
-        PointF p2 = null;
-        PointF vector = null;
-        if (event.getPointerCount() == 2) {
-            p1 = new PointF(event.getX(0), mDisplaySize.y - event.getY(0));
-            p2 = new PointF(event.getX(1), mDisplaySize.y - event.getY(1));
-            vector = new PointF(p2.x - p1.x, p2.y - p1.y);
-        } else if (event.getPointerCount() < 2) {
-            //mRegisteredVector;
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
+            if (event.getPointerCount() == 2) {
+                p1 = new PointF(event.getX(0), mDisplaySize.y - event.getY(0));
+                p2 = new PointF(event.getX(1), mDisplaySize.y - event.getY(1));
+                vector = new PointF(p2.x - p1.x, p2.y - p1.y);
+                oldVector = new PointF(vector.x, vector.y);
+                mRegisteredZoom = mCamera.getZoom().x;
+                return true;
+            }
+
+            if (event.getPointerCount() == 1) {
+                oldX = event.getX();
+                oldY = event.getY();
+                return true;
+            }
+
+        }
+
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            oldVector = null;
         }
 
         if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            if (event.getPointerCount() == 1) {
-                if (mRegisteredCenter == null) {
-                    mRegisteredCenter = mCamera.getPosition();
-                } else {
-                    float deltaX = (event.getX() - mRegisteredCenter.x)/100;
-                    float deltaY = (mDisplaySize.y - event.getY() - mRegisteredCenter.y)/100;
-                    mCamera.moveTo(mRegisteredCenter.x - deltaX, mRegisteredCenter.y - deltaY);
-                }
-            } else if (event.getPointerCount() == 2) {
 
-                if (mRegisteredVector == null) {
-                    mRegisteredVector = new PointF(vector.x, vector.y);
-                    mRegisteredZoom = mCamera.getZoom().x;
-                    //mRegisteredRotation = mCamera.getRotation();
-                }
+            if (event.getPointerCount() == 2) {
+                oldX = event.getX();
+                oldY = event.getY();
+                p1 = new PointF(event.getX(0), mDisplaySize.y - event.getY(0));
+                p2 = new PointF(event.getX(1), mDisplaySize.y - event.getY(1));
+                vector = new PointF(p2.x - p1.x, p2.y - p1.y);
 
-                // focus on the center of the vector
-                /*mCamera.setPosition(
-                        ( p1.x + vector.x / 2 ),
-                        ( p1.y + vector.y / 2)
-                );*/
+                if(oldVector == null) oldVector = new PointF(vector.x, vector.y);
+                mRegisteredZoom = mCamera.getZoom().x;
+
                 // zoom it
-                float scale = vector.length() / mRegisteredVector.length();
+                float scale = vector.length() / oldVector.length();
                 if (scale > 0) {
                     mCamera.setZoom(mRegisteredZoom * scale);
                 }
+
+                oldVector = new PointF(vector.x, vector.y);
+                return true;
             }
+
+            if (event.getPointerCount() == 1) {
+
+                float deltaX = (event.getX() - oldX);
+                float deltaY = (event.getY() - oldY);
+                mCamera.moveTo(mCamera.getPosition().x - deltaX, mCamera.getPosition().y + deltaY);
+                oldX = event.getX();
+                oldY = event.getY();
+                return true;
+            }
+
+
         }
 
 

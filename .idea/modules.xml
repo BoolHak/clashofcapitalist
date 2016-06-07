@@ -3,7 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/clashofcapitalist.iml" filepath="$PROJECT_DIR$/.idea/clashofcapitalist.iml" />
       <module fileurl="file://$PROJECT_DIR$/clashofcapitalist.iml" filepath="$PROJECT_DIR$/clashofcapitalist.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pure2D/pure2D.iml" filepath="$PROJECT_DIR$/pure2D/pure2D.iml" />
       <module fileurl="file://$PROJECT_DIR$/pure2D/pure2D.iml" filepath="$PROJECT_DIR$/pure2D/pure2D.iml" />
     </modules>
   </component>
